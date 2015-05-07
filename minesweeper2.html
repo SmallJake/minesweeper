@@ -1,0 +1,41 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<title>Minesweeper</title>
+	</head>
+	<body>
+		<h1>Minesweeper</h1>
+
+		<div id ="field">
+			<div id = "menu">
+				<div class="alignleft">Number of rows:</div>
+				<input class="option" type="text" id="rows" type="number" value="10">
+				<div style="clear: both;"></div>
+
+				<div class="alignleft">Number of columns:</div>
+				<input class="option" type="text" id="cols" type="number" value="10">
+				<div style="clear: both;"></div>
+
+				<div class="alignleft">Difficulty:</div>
+				<form class="option">
+					<div class="alignleft">Easy</div>
+					<input class="alignright" type="radio" id="dif" name ="difficulty" value="easy" checked>
+					<div style="clear: both;"></div>
+
+					<div class="alignleft">Medium</div>
+					<input class="alignright" type="radio" id="dif" name ="difficulty" value="medium">
+					<div style="clear: both;"></div>
+
+					<div class="alignleft">Hard</div>
+					<input class="alignright" type="radio" id="dif" name ="difficulty" value="hard">
+					<div style="clear: both;"></div>
+				</form>
+				<div style="clear: both;"></div>
+
+				<div id	="submitbutton"><input type="button" onclick="submit()" value="Start game"></div>
+			</div>
+		</div>
+		<script src="minesweeper.js"></script>
+
+	</body>
+</html>

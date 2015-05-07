@@ -1,0 +1,42 @@
+div {
+	margin-bottom:5px;
+}
+
+form {
+	margin-bottom:5px;
+}
+
+h1 {
+	text-align: center;
+}
+
+#menu {
+	display: none;
+	margin-left: auto;
+	margin-right: auto;
+	width:500px;
+}
+
+#field {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#submitbutton {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.alignleft {
+	float: left;
+}
+
+.alignright {
+	float: right;
+}
+
+.option {
+	float: right;
+	width:175px
+}
