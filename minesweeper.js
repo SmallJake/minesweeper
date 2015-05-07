@@ -1,20 +1,23 @@
 coveredSquare = "images\\square-large.png"
 flagSquare = "images\\flag-large.png"
+mineSquare = "images\\mine.png"
 
 const EASY = 0.1
 const MID = 0.2
 const HARD = 0.3
 
-minWidth = 500
-size = 20
+const MIDWIDTH = 500
+const MINSIZE = 20
 
-rows = 0
-cols = 0
-diff = EASY
+mySize = 0
 
-first = true
+myRows = 0
+myCols = 0
+myDiff = EASY
 
-board = []
+myFirstClick = true
+
+myBoard = []
 
 //Logical representation of a board square
 function Square(){
@@ -29,11 +32,13 @@ function showMenu(){
 	document.getElementById("menu").style.display = "block"
 }
 
-//Triggered 
+//Triggered when the player hits the start game button
+//Checks their input & starts the game
 function submit(){
-	cont = true
-	rows = document.getElementById("rows").value
-	if (isNaN(rows) || rows < 1) {
+	var cont = true
+
+	myRows = document.getElementById("rows").value
+	if (isNaN(myRows) || myRows < 1) {
 		document.getElementById("rowWarn").style.visibility = "visible"
 		cont = false
 	}
@@ -41,121 +46,159 @@ function submit(){
 		document.getElementById("rowWarn").style.visibility = "hidden"
 	}
 
-	cols = document.getElementById("cols").value
-	if (isNaN(cols) || cols < 1) {
+	myCols = document.getElementById("cols").value
+	if (isNaN(myCols) || myCols < 1) {
 		document.getElementById("colWarn").style.visibility = "visible"
 		cont = false
 	}
 	else {
 		document.getElementById("colWarn").style.visibility = "hidden"
 	}
-	diffRadio = document.forms[0]
-	diff = EASY
-	for (i = 1; i < 3; i++) {
-		if (diffRadio[i].checked)
-			diff = diffRadio[i].value
+
+	var diffRadio = document.getElementsByName("difficulty")
+	for (var i = 0; i < 3; i++) {
+		if (diffRadio[i].checked){
+			myDiff = diffRadio[i].value
+			break
+		}
 	}
+
 	if (cont)
 		startGame()
 }
 
+//Initiates the board & draws the field
 function startGame(){
 	document.getElementById("menu").style.display = "none"
-	size = Math.max(size, minWidth/cols)
-	document.getElementById("field").style.width = size * cols + 10
+	mySize = Math.max(MINSIZE, MIDWIDTH/myCols)
+	document.getElementById("field").style.width = mySize * myCols + 10
 
-	for (i = 0; i < rows; i++){
-		row = []
-		for (j = 0; j < cols; j++){
+	for (var i = 0; i < myRows; i++){
+		var row = []
+		for (var j = 0; j < myCols; j++){
 			row[j] = new Square()
 		}
-		board[i] = row
+		myBoard[i] = row
 	}
 
-	first = true
+	myFirstClick = true
 	drawField()
 }
 
-function layMines(point){
-	squaresLeft = rows * cols
-	totalMines = squaresLeft * diff
-	mines = 0
-	squaresLeft--
-	for (r = 0; r < rows; r++){
-		for (c = 0; c < cols; c++){
-			if (r == point.row && c == point.col)
-				continue
-			chance = (totalMines - mines)/squaresLeft
-			squaresLeft--
-			if (Math.random() < chance){
-				board[r][c].isMine = true
-				mines++
-				minRow = Math.max(r - 1, 0)
-				maxRow = Math.min(r + 2, rows)
-				minCol = Math.max(c - 1, 0)
-				maxCol = Math.min(c + 2, cols)
-				for (m = minRow; m < maxRow; m++)
-					for (n = minCol; n < maxCol; n++)
-						board[m][n].adjacentMines = board[m][n].adjacentMines + 1
-			}
-		}
-	}
-}
-
+//Draws all the squares
 function drawField(){
-	field = ""
-	for (i = 0; i < rows; i++){
-		for (j = 0; j < cols; j++){
-			field += imgTag(i, j)
+	var field = ""
+	for (var i = 0; i < myRows; i++){
+		for (var j = 0; j < myCols; j++){
+			field += "<img id =\"" + i + " " + j + "\" onclick=\"handleClick(" + i + "," + j + ")\" src=" + coveredSquare + " width = \"" + mySize + "\" height = \"" + mySize + "\">"
 		}
 		field += "<br>\n"
 	}
 	document.getElementById("field").innerHTML = field
 }
 
-
-
-function imgTag(row, col){
-	funcStr = "\"handleClick({row:" + row + ", col:" + col + "})\""
-	tag = "<img id =\"" + row + " " + col + "\" onclick=\"handleClick({row:" + row + ", col:" + col + "})\" src=" + coveredSquare + " width = \"" + size + "\" height = \"" + size + "\">"
-	return tag
+// Randomly places mines on the board, excluding the given square
+function layMines(row, col){
+	var squaresLeft = myRows * myCols
+	var totalMines = squaresLeft * myDiff
+	var mines = 0
+	squaresLeft--
+	for (var r = 0; r < myRows; r++){
+		for (var c = 0; c < myCols; c++){
+			if (r == row && c == col)
+				continue
+			chance = (totalMines - mines)/squaresLeft
+			squaresLeft--
+			if (Math.random() < chance){
+				myBoard[r][c].isMine = true
+				mines++
+				applyAround(r, c, increaseMineCount)
+			}
+		}
+	}
 }
 
-function firstClick(point){
-	if(event.ctrlKey){
-		square = board[point.row][point.col]
-		square.isFlagged = !square.isFlagged
-		document.getElementById(point.row + " " + point.col).src = square.isFlagged ? flagSquare : coveredSquare
+function applyAround(row, col, func){
+	var minRow = Math.max(row - 1, 0)
+	var maxRow = Math.min(row + 1, myRows - 1)
+	var minCol = Math.max(col - 1, 0)
+	var maxCol = Math.min(col + 1, myCols - 1)
+	for (var m = minRow; m <= maxRow; m++){
+		for (var n = minCol; n <= maxCol; n++) {
+			var x = m
+			var y = n
+			if (!(m == row && n == col))
+				func(m, n)
+		}
+	}
+}
+
+function increaseMineCount(row, col){
+	myBoard[row][col].adjacentMines++
+}
+
+//Called whenever a covered square is clicked, takes an object with the coordinates of the clicked square
+function handleClick(row, col) {
+	if (myFirstClick) {
+		firstClick(row, col)
 	}
 	else {
-		layMines(point)
-		otherClick(point)
+		otherClick(row, col)
 	}
 }
 
-function otherClick(point) {
-	square = board[point.row][point.col]
+//Called until the first non-ctrl-click, takes an object with the coordinates of the clicked square
+//Toggles whether a square has a flag on ctrl-click
+//On a regular click distributes mines across the board, making sure the given square is not a mine
+//This function ensures that a player does not lose on their first click, since that would seem unfair
+function firstClick(row, col){
+	if(event.ctrlKey){
+		var square = myBoard[row][col]
+		square.isFlagged = !square.isFlagged
+		document.getElementById(row + " " + col).src = square.isFlagged ? flagSquare : coveredSquare
+	}
+	else {
+		myFirstClick = false
+		layMines(row, col)
+		otherClick(row, col)
+	}
+}
+
+//Called for each click of an uncovered square, takes an object with the coordinates of the clicked square
+//Toggles whether a square has a flag on ctrl-click
+//On a regular click uncovers a square
+function otherClick(row, col) {
+	var square = myBoard[row][col]
 	if(event.ctrlKey){
 		square.isFlagged = !square.isFlagged
-		document.getElementById(point.row + " " + point.col).src = square.isFlagged ? flagSquare : coveredSquare
+		document.getElementById(row + " " + col).src = square.isFlagged ? flagSquare : coveredSquare
 	}
 	else {
 		if (!square.isFlagged){
-			boardPiece = document.getElementById(point.row + " " + point.col)
-			boardPiece.src = "images\\" + square.adjacentMines + ".png"
-			boardPiece.onclick = ""
+			reveal(row, col)
 		}
 	}
-
 }
 
-function handleClick(point) {
-	if (first) {
-		firstClick(point)
-		first = false
-	}
-	else {
-		otherClick(point)
+function reveal(row, col) {
+	var square = myBoard[row][col]
+	if (!square.isRevealed){
+		square.isRevealed = true
+
+		var boardPiece = document.getElementById(row + " " + col)
+		var adj = square.adjacentMines
+
+		if (square.isMine){
+			boardPiece.src = mineSquare
+		}
+		else{
+			boardPiece.src = "images\\" + adj + ".png"
+		}
+
+		if (adj == 0)
+			applyAround(row, col, reveal)
+
+		boardPiece.onclick = null
 	}
 }
 
