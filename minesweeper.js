@@ -1,5 +1,5 @@
-openSquare = "\"square-large.png\""
-flagSquare = "\"flag-large.png\""
+openSquare = "images\\square-large.png"
+flagSquare = "images\\flag-large.png"
 
 const EASY = 0.1
 const MID = 0.2
@@ -14,8 +14,8 @@ diff = EASY
 
 board = []
 
-function Square(mine){
-	this.isMine = mine
+function Square(){
+	this.isMine = false
 	this.isFlagged = false
 	this.isRevealed = false
 	this.adjacent = 0
@@ -38,14 +38,32 @@ function submit(){
 }
 
 function startGame(){
-	document.getElementById("menu").style.visibility = "none"
+	document.getElementById("menu").style.display = "none"
 	size = Math.max(size, minWidth/cols)
 	document.getElementById("field").style.width = size * cols + 10
 	drawField(firstClick)
 }
 
 function layMines(point){
-	
+	squaresLeft = rows * cols
+	totalMines = squaresLeft * diff
+	mines = 0
+	squaresLeft--
+	for (i = 0; i < rows; i++){
+		row = []
+		for (j = 0; j < cols; j++){
+			if (i == point.row && j == point.col)
+				continue
+			row[j] = new Square()
+			chance = (totalMines - mines)/squaresLeft
+			if (Math.random() < chance){
+				row[j].isMine = true
+				mines++
+			}
+			squaresLeft--
+		}
+		board[i] = row
+	}
 }
 
 function drawField(clickFunc){
@@ -70,11 +88,16 @@ function imgTag(row, col, clickFunc){
 function firstClick(point){
 	confirm("first")
 	layMines(point)
+	drawField(clicked)
 }
 
 function clicked(point) {
-	confirm(board[point.row][point.col].isMine)
-	drawField(clicked)
+	if(event.ctrlKey){
+		board[point.row][point.col].isFlagged = !board[point.row][point.col].isFlagged
+		document.getElementById(point.row + " " + point.col).src = board[point.row][point.col].isFlagged ? flagSquare : openSquare
+	}
+	else {
+	}
 }
 
 showMenu()
