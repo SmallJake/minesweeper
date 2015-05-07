@@ -1,5 +1,6 @@
-openSquare = "images\\square-large.png"
+coveredSquare = "images\\square-large.png"
 flagSquare = "images\\flag-large.png"
+openSquare = "images\\open.png"
 
 const EASY = 0.1
 const MID = 0.2
@@ -81,7 +82,7 @@ function drawField(clickFunc){
 
 function imgTag(row, col, clickFunc){
 	funcStr = "\"" + clickFunc.name + "({row:" + row + ", col:" + col + "})\""
-	tag = "<img id =\"" + row + " " + col + "\" onclick=" + funcStr + " src=" + openSquare + " width = \"" + size + "\" height = \"" + size + "\">"
+	tag = "<img id =\"" + row + " " + col + "\" onclick=" + funcStr + " src=" + coveredSquare + " width = \"" + size + "\" height = \"" + size + "\">"
 	return tag
 }
 
@@ -94,9 +95,10 @@ function firstClick(point){
 function clicked(point) {
 	if(event.ctrlKey){
 		board[point.row][point.col].isFlagged = !board[point.row][point.col].isFlagged
-		document.getElementById(point.row + " " + point.col).src = board[point.row][point.col].isFlagged ? flagSquare : openSquare
+		document.getElementById(point.row + " " + point.col).src = board[point.row][point.col].isFlagged ? flagSquare : coveredSquare
 	}
 	else {
+		document.getElementById(point.row + " " + point.col).src = openSquare
 	}
 }
 
