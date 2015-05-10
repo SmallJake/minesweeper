@@ -9,35 +9,48 @@
 		<div id =menu>
 
 			<div class=alignleft>Number of rows:</div>
-			<input class=option type=text id=rows type=number value=5>
+			<input class=option type=text id=rows type=number value=10>
 			<div style="clear: both;"></div>
 			<div id = rowWarn class =warning>Please enter a number greater than 0.</div>
 
 			<div class=alignleft>Number of columns:</div>
-			<input class=option type=text id=cols type=number value=5>
+			<input class=option type=text id=cols type=number value=10>
 			<div style="clear: both;"></div>
 			<div id = colWarn class =warning>Please enter a number greater than 0.</div>
 
 			<div class=alignleft>Difficulty:</div>
-			<form class=option>
+			<div class=option>
 				<div class=alignleft>Easy</div>
 				<input class=alignright type=radio id=easy name=difficulty value=0.1 checked>
 				<div style="clear: both;"></div>
 				<div class=alignleft>Medium</div>
-				<input class=alignright type=radio id=medium name =difficulty value=0.2>
+				<input class=alignright type=radio id=medium name =difficulty value=0.15>
 				<div style="clear: both;"></div>
 				<div class=alignleft>Hard</div>
-				<input class=alignright type=radio id=hard name =difficulty value=0.3>
+				<input class=alignright type=radio id=hard name =difficulty value=0.2>
 				<div style="clear: both;">
 				</div>
-			</form>
+			</div>
 			<div style="clear: both;"></div>
 
-			<div id=submitbutton><input type=button onclick=submit() value=Start game></div>
+			<div id=submitbutton><input type=button onclick=submit() value="Start game"></div>
 		</div>
 
-
-		<div id =field></div>	
+		<div id=result class=overlay>
+			<div id=resultbox>
+				<h3 id=resulthead></h3>
+				<p id=resultbody></p>
+				<br>
+				<input id=restartbutton class=alignleft type=button onclick=startGame() value="Play again">
+				<input id=menubutton class=alignright type=button onclick=showMenu() value="Return to menu">
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+		<div id=field></div>
+		<div id=options>
+			<input class=alignleft class=alignright type=button onclick=showMenu() value="Return to menu">
+			<div id=timer class=alignright>0:00</div>
+		</div>
 		<script src=minesweeper.js></script>
 
 	</body>

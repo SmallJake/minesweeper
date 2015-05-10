@@ -1,9 +1,5 @@
 div {
-	margin-bottom:5px;
-}
-
-form {
-	margin-bottom:5px;
+	margin-bottom: 5;
 }
 
 h1 {
@@ -11,7 +7,7 @@ h1 {
 }
 
 #menu {
-	display: none;
+	display: block;
 	margin-left: auto;
 	margin-right: auto;
 	width:500px;
@@ -22,10 +18,44 @@ h1 {
 	margin-right: auto;
 }
 
+#options {
+	display: none;
+	width: 700;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 24;
+}
+
 #submitbutton {
 	margin-left: auto;
 	margin-right: auto;
 	text-align: center;
+}
+
+#resultbox{
+	margin-top: 150;
+	margin-left: auto;
+	margin-right: auto;
+	width: 300px;
+//	height: 140px;
+	background: #00FA9A;
+	text-align: center;
+}
+
+#restartbutton{
+	width:110;
+	margin-left: 10;
+	margin-bottom: 5;
+}
+
+#menubutton{
+	width:110;
+	margin-right: 10;
+	margin-bottom: 5;
+}
+
+#resulthead {
+	padding-top:10;
 }
 
 .alignleft {
@@ -46,4 +76,12 @@ h1 {
 	color: red;
 	font-weight: bold;
 	margin-bottom:10px;
+}
+
+.overlay{
+	display: none;
+	width: 100%;
+	left: 0;
+	position: fixed;
+	z-index: 100;
 }
